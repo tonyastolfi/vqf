@@ -1,4 +1,8 @@
 # vqf
+
+***NOTE: This is a hard-fork of https://github.com/splatlab/vqf; see [Modifications](#modifications) for what has changed***
+
+
 Vector Quotient Filters: Overcoming the Time/Space Trade-Off in Filter Design
 
 This work appeared at SIGMOD 2021. If you use this software please cite us:

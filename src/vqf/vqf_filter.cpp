@@ -17,6 +17,7 @@
 #include <string.h>
 #include <tmmintrin.h>
 #include <algorithm>
+#include <iostream>
 
 #include "vqf_filter.h"
 #include "vqf_precompute.h"
@@ -452,6 +453,46 @@ void vqf_filter_init_blocks(vqf_filter<16>* filter, uint64_t total_blocks);
 
 //==#==========+==+=+=++=+++++++++++-+-+--+----- --- -- -  -  -   -
 //
+uint64_t vqf_nslots_for_size(int tag_bits, uint64_t target_byte_size)
+{
+   uint64_t z = target_byte_size;
+   uint64_t b, q, h;
+
+   switch (tag_bits) {
+   case 8:
+      h = sizeof(vqf_filter<8>);
+      b = sizeof(vqf_block<8>);
+      q = vqf_constants<8>::QUQU_SLOTS_PER_BLOCK;
+      break;
+
+   case 16:
+      h = sizeof(vqf_filter<16>);
+      b = sizeof(vqf_block<16>);
+      q = vqf_constants<16>::QUQU_SLOTS_PER_BLOCK;
+      break;
+
+   default:
+      std::cerr << "ILLEGAL TAG_BITS VALUE: " << tag_bits << std::endl;
+      std::terminate();
+   }
+
+   uint64_t n = q * ((z - h) - 1) / b;
+   uint64_t check_z = ((n + q) / q) * b + h;
+
+   if (z < check_z) {
+      n -= q;
+      check_z = ((n + q) / q) * b + h;
+      if (z < check_z) {
+         std::cerr << "Check the math! " << z << " vs " << check_z << std::endl;
+         std::terminate();
+      }
+   }
+
+   return n;
+}
+
+//==#==========+==+=+=++=+++++++++++-+-+--+----- --- -- -  -  -   -
+//
 // Create n/log(n) blocks of log(n) slots.
 // log(n) is 51 given a cache line size.
 // n/51 blocks.
@@ -643,7 +684,6 @@ bool vqf_insert(vqf_filter<TAG_BITS>* restrict filter, uint64_t hash)
          block_md = alt_block_md;
       } else if (block_free == vqf_constants<TAG_BITS>::QUQU_BUCKETS_PER_BLOCK) {
          unlock_blocks(filter, block_index, alt_block_index);
-         fprintf(stderr, "vqf filter is full.");
          return false;
 
       } else {

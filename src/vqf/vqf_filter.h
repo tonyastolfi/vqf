@@ -80,6 +80,8 @@ struct vqf_filter {
    vqf_block<TAG_BITS> blocks[];
 };
 
+uint64_t vqf_nslots_for_size(int tag_bits, uint64_t target_byte_size);
+
 /** \brief Returns the number of bytes required to initialize a filter with the specified number of slots.
  */
 template <int TAG_BITS>

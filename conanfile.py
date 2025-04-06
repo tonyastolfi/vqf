@@ -32,15 +32,15 @@ class VqfRecipe(ConanFile):
     #+++++++++++-+-+--+----- --- -- -  -  -   -
     # Optional metadata
     #
-    license = "TODO"
+    license = "BSD-3"
 
-    author = "TODO"
+    author = "Prashant Pandey, Alex Conway, Rob Johnson, and Tony Astolfi"
 
-    url = "TODO"
+    url = "https://github.com/tonyastolfi/vqf"
 
-    description = "TODO"
+    description = "Vector Quotient Filters: Overcoming the Time/Space Trade-Off in Filter Design (C++ fork)"
 
-    topics = ("TODO",)
+    topics = ("data structures",)
     #
     #+++++++++++-+-+--+----- --- -- -  -  -   -
 

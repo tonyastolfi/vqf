@@ -48,13 +48,18 @@ class VqfRecipe(ConanFile):
         VISIBLE = self.cor.VISIBLE
         OVERRIDE = self.cor.OVERRIDE
 
-        #self.requires("boost/[>=1.84.0]", **VISIBLE)
         self.requires("openssl/3.2.0", **VISIBLE)
         
+        self.test_requires("batteries/0.58.1-devel")
+        self.test_requires("boost/[>=1.84.0]")
         self.test_requires("gtest/[>=1.14.0]")
 
     def configure(self):
+        self.options["gtest"].shared = False
+        self.options["boost"].shared = False
         self.options["boost"].without_test = True
+        self.options["batteries"].with_glog = True
+        self.options["batteries"].header_only = False
 
     #+++++++++++-+-+--+----- --- -- -  -  -   -
 

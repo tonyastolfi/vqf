@@ -2,10 +2,12 @@
 #ifndef VQF_VQF_HPP
 #define VQF_VQF_HPP
 
+#include "vqf/vqf_filter.h"
+
 namespace vqf {
 
 bool entry_point();
 
-}  // vqf
+}  //namespace vqf
 
 #endif  // VQF_VQF_HPP

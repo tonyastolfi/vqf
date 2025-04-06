@@ -24,6 +24,8 @@ foreach (_file "FORCE_LIST_NOT_EMPTY;${vqf_TestSources}")
   list(REMOVE_ITEM vqf_Sources ${_file})
 endforeach ()
 
+message("vqf_Sources = ${vqf_Sources}")
+
 add_library(vqf ${vqf_Sources})
 
 # Install the library, if we are not header only.
@@ -59,7 +61,8 @@ add_test(
 #
 target_link_libraries(
   vqf
-  PUBLIC openssl::openssl
+  PUBLIC
+  openssl::openssl
   #
   # Add other library -> library dependencies here.
   #
@@ -67,7 +70,10 @@ target_link_libraries(
 
 target_link_libraries(
   vqf_Test
-  PRIVATE gtest::gtest
+  PRIVATE
+  batteries::batteries
+  boost::boost
+  gtest::gtest
   #
   # Add other test -> library dependencies here
   #

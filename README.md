@@ -90,3 +90,24 @@ This is a fork of [https://github.com/splatlab/vqf](https://github.com/splatlab/
 - Removed source files that contained a `main` function, so that what is left is just library code
 - Changed the return type of `vqf_init` to `[[nodiscard]]` so that code that allocates a filter and doesn't read the pointer will fail to compile (since it is almost certainly a memory leak).
 - Added a `vqf_free` function which sets the passed pointer to `nullptr` (since the allocation method (`malloc`) is technically hidden behind the interface of `vqf_init`)
+
+## Benchmark Results
+
+From the unit test, on AMD Threadripper 7970x 32c/64t, 128 GB DDR5, Linux kernel 6.3 (Ubuntu 22).
+
+```
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from VqfTest
+[ RUN      ] VqfTest.Test
+ is_present_count == 299
+bits/key=8 size=32112 ε=0.00295054 keys=15000 query_latency == 0.0126815us(n=100000);rate=7.88551e+07/s
+ is_present_count == 3
+bits/key=16 size=54960 ε=1.36e-05 keys=15000 query_latency == 0.00728866us(n=100000);rate=1.37199e+08/s
+[       OK ] VqfTest.Test (1637 ms)
+[----------] 1 test from VqfTest (1637 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (1637 ms total)
+[  PASSED  ] 1 test.
+```

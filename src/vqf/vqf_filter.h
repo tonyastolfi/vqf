@@ -114,12 +114,12 @@ bool vqf_remove(vqf_filter<TAG_BITS>* restrict filter, uint64_t hash);
 /** \brief Tests the filter to see whether it _might_ contain the given hash.
  */
 template <int TAG_BITS>
-bool vqf_is_present(vqf_filter<TAG_BITS>* restrict filter, uint64_t hash);
+bool vqf_is_present(const vqf_filter<TAG_BITS>* restrict filter, uint64_t hash);
 
 /** \brief Returns the in-memory size of the filter, in bytes.
  */
 template <int TAG_BITS>
-uint64_t vqf_filter_size(vqf_filter<TAG_BITS>* restrict filter);
+uint64_t vqf_filter_size(const vqf_filter<TAG_BITS>* restrict filter);
 
 /** \brief Frees `*filter` (which MUST have been allocated via vqf_init) and sets the pointer to null.
  */

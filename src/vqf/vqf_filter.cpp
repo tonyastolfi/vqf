@@ -166,7 +166,7 @@ static inline uint64_t lookup_64(uint64_t vector, uint64_t rank)
    return lower_return;
 }
 
-static inline uint64_t lookup_128(uint64_t* vector, uint64_t rank)
+static inline uint64_t lookup_128(const uint64_t* vector, uint64_t rank)
 {
    uint64_t lower_word = vector[0];
    uint64_t lower_rank = word_rank(lower_word);
@@ -183,7 +183,7 @@ static inline int64_t select_64(uint64_t vector, uint64_t rank)
    return _tzcnt_u64(lookup_64(vector, rank));
 }
 
-static inline int64_t select_128(uint64_t* vector, uint64_t rank)
+static inline int64_t select_128(const uint64_t* vector, uint64_t rank)
 {
    return _tzcnt_u64(lookup_128(vector, rank));
 }
@@ -209,18 +209,18 @@ struct vqf_print<8> {
       puts("");
    }
 
-   static void print_tags(uint8_t* tags, uint32_t size)
+   static void print_tags(const uint8_t* tags, uint32_t size)
    {
       for (uint8_t i = 0; i < size; i++)
          printf("%d ", (uint32_t)tags[i]);
       printf("\n");
    }
 
-   static void print_block(vqf_filter<TAG_BITS>* filter, uint64_t block_index)
+   static void print_block(const vqf_filter<TAG_BITS>* filter, uint64_t block_index)
    {
       printf("block index: %ld\n", block_index);
       printf("metadata: ");
-      uint64_t* md = filter->blocks[block_index].md;
+      const uint64_t* md = filter->blocks[block_index].md;
       print_bits(*(__uint128_t*)md, vqf_constants<TAG_BITS>::QUQU_BUCKETS_PER_BLOCK +
                                         vqf_constants<TAG_BITS>::QUQU_SLOTS_PER_BLOCK);
       printf("tags: ");
@@ -244,14 +244,14 @@ struct vqf_print<16> {
       puts("");
    }
 
-   static void print_tags(uint16_t* tags, uint32_t size)
+   static void print_tags(const uint16_t* tags, uint32_t size)
    {
       for (uint8_t i = 0; i < size; i++)
          printf("%d ", (uint32_t)tags[i]);
       printf("\n");
    }
 
-   static void print_block(vqf_filter<TAG_BITS>* filter, uint64_t block_index)
+   static void print_block(const vqf_filter<TAG_BITS>* filter, uint64_t block_index)
    {
       printf("block index: %ld\n", block_index);
       printf("metadata: ");
@@ -412,13 +412,13 @@ struct vqf_md<16> {
 //==#==========+==+=+=++=+++++++++++-+-+--+----- --- -- -  -  -   -
 //
 template <int TAG_BITS>
-uint64_t vqf_filter_size(vqf_filter<TAG_BITS>* restrict filter)
+uint64_t vqf_filter_size(const vqf_filter<TAG_BITS>* restrict filter)
 {
    return sizeof(*filter) + filter->metadata.total_size_in_bytes;
 }
 
-template uint64_t vqf_filter_size<8>(vqf_filter<8>* restrict filter);
-template uint64_t vqf_filter_size<16>(vqf_filter<16>* restrict filter);
+template uint64_t vqf_filter_size<8>(const vqf_filter<8>* restrict filter);
+template uint64_t vqf_filter_size<16>(const vqf_filter<16>* restrict filter);
 
 //==#==========+==+=+=++=+++++++++++-+-+--+----- --- -- -  -  -   -
 //
@@ -838,7 +838,7 @@ template bool vqf_remove<16>(vqf_filter<16>* restrict filter, uint64_t hash);
 
 //==#==========+==+=+=++=+++++++++++-+-+--+----- --- -- -  -  -   -
 //
-static inline bool check_tags(vqf_filter<8>* restrict filter, uint64_t tag, uint64_t block_index)
+static inline bool check_tags(const vqf_filter<8>* restrict filter, uint64_t tag, uint64_t block_index)
 {
    static constexpr int TAG_BITS = 8;
 
@@ -847,15 +847,15 @@ static inline bool check_tags(vqf_filter<8>* restrict filter, uint64_t tag, uint
 
 #ifdef __AVX512BW__
    __m512i bcast = _mm512_set1_epi8(tag);
-   __m512i block = _mm512_loadu_si512(reinterpret_cast<__m512i*>(&filter->blocks[index]));
+   __m512i block = _mm512_loadu_si512(reinterpret_cast<const __m512i*>(&filter->blocks[index]));
    volatile __mmask64 result = _mm512_cmp_epi8_mask(bcast, block, _MM_CMPINT_EQ);
 #else
    __m256i bcast = _mm256_set1_epi8(tag);
-   __m256i block = _mm256_loadu_si256(reinterpret_cast<__m256i*>(&filter->blocks[index]));
+   __m256i block = _mm256_loadu_si256(reinterpret_cast<const __m256i*>(&filter->blocks[index]));
    __m256i result1t = _mm256_cmpeq_epi8(bcast, block);
    __mmask32 result1 = _mm256_movemask_epi8(result1t);
 
-   block = _mm256_loadu_si256(reinterpret_cast<__m256i*>((uint8_t*)&filter->blocks[index] + 32));
+   block = _mm256_loadu_si256(reinterpret_cast<const __m256i*>((const uint8_t*)&filter->blocks[index] + 32));
    __m256i result2t = _mm256_cmpeq_epi8(bcast, block);
    __mmask32 result2 = _mm256_movemask_epi8(result2t);
 
@@ -876,7 +876,7 @@ static inline bool check_tags(vqf_filter<8>* restrict filter, uint64_t tag, uint
 
 //==#==========+==+=+=++=+++++++++++-+-+--+----- --- -- -  -  -   -
 //
-static inline bool check_tags(vqf_filter<16>* restrict filter, uint64_t tag, uint64_t block_index)
+static inline bool check_tags(const vqf_filter<16>* restrict filter, uint64_t tag, uint64_t block_index)
 {
    static constexpr int TAG_BITS = 16;
 
@@ -885,17 +885,17 @@ static inline bool check_tags(vqf_filter<16>* restrict filter, uint64_t tag, uin
 
 #ifdef __AVX512BW__
    __m512i bcast = _mm512_set1_epi16(tag);
-   __m512i block = _mm512_loadu_si512(reinterpret_cast<__m512i*>(&filter->blocks[index]));
+   __m512i block = _mm512_loadu_si512(reinterpret_cast<const __m512i*>(&filter->blocks[index]));
    volatile __mmask64 result = _mm512_cmp_epi16_mask(bcast, block, _MM_CMPINT_EQ);
 #else
    uint64_t alt_mask = 0x55555555;
    __m256i bcast = _mm256_set1_epi16(tag);
-   __m256i block = _mm256_loadu_si256(reinterpret_cast<__m256i*>(&filter->blocks[index]));
+   __m256i block = _mm256_loadu_si256(reinterpret_cast<const __m256i*>(&filter->blocks[index]));
    __m256i result1t = _mm256_cmpeq_epi16(bcast, block);
    __mmask32 result1 = _mm256_movemask_epi8(result1t);
    result1 = _pext_u32(result1, alt_mask);
 
-   block = _mm256_loadu_si256(reinterpret_cast<__m256i*>((uint8_t*)&filter->blocks[index] + 32));
+   block = _mm256_loadu_si256(reinterpret_cast<const __m256i*>((const uint8_t*)&filter->blocks[index] + 32));
    __m256i result2t = _mm256_cmpeq_epi16(bcast, block);
    __mmask32 result2 = _mm256_movemask_epi8(result2t);
    result2 = _pext_u32(result2, alt_mask);
@@ -921,9 +921,9 @@ static inline bool check_tags(vqf_filter<16>* restrict filter, uint64_t tag, uin
 // select(i) - i is the slot index for the end of the run.
 //
 template <int TAG_BITS>
-bool vqf_is_present(vqf_filter<TAG_BITS>* restrict filter, uint64_t hash)
+bool vqf_is_present(const vqf_filter<TAG_BITS>* restrict filter, uint64_t hash)
 {
-   vqf_metadata* restrict metadata = &filter->metadata;
+   const vqf_metadata* restrict metadata = &filter->metadata;
    uint64_t key_remainder_bits = metadata->key_remainder_bits;
    uint64_t range = metadata->range;
 
@@ -938,5 +938,5 @@ bool vqf_is_present(vqf_filter<TAG_BITS>* restrict filter, uint64_t hash)
    return check_tags(filter, tag, block_index) || check_tags(filter, tag, alt_block_index);
 }
 
-template bool vqf_is_present<8>(vqf_filter<8>* restrict filter, uint64_t hash);
-template bool vqf_is_present<16>(vqf_filter<16>* restrict filter, uint64_t hash);
+template bool vqf_is_present<8>(const vqf_filter<8>* restrict filter, uint64_t hash);
+template bool vqf_is_present<16>(const vqf_filter<16>* restrict filter, uint64_t hash);

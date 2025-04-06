@@ -18,9 +18,9 @@ DerivePointerAlignment: false
 FixNamespaceComments: true
 IndentCaseLabels: false
 IndentPPDirectives: None
-UseTab: Always
-IndentWidth: 8
-TabWidth: 8
+#UseTab: Always
+IndentWidth: 3
+#TabWidth: 8
 PointerAlignment: Left
 IncludeBlocks: Preserve
 SortIncludes: true

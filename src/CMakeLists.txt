@@ -8,8 +8,8 @@ file(GLOB_RECURSE vqf_Sources
 
 file(GLOB_RECURSE vqf_Headers
   LIST_DIRECTORIES false
-  ${CMAKE_CURRENT_SOURCE_DIR}/*.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/*.i
+  ${CMAKE_CURRENT_SOURCE_DIR}/*.h*
+  ${CMAKE_CURRENT_SOURCE_DIR}/*.i*
   )
 
 #+++++++++++-+-+--+----- --- -- -  -  -   -

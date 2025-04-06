@@ -67,6 +67,10 @@ Authors
 - Alex Conway <aconway@vmware.com>
 - Rob Johnson <robj@vmware.com>
 
+C++ Port + Extensions
+---------------------
+- Tony Astolfi <tastolfi@gmail.com>
+
 ## Modifications
 
 This is a fork of [https://github.com/splatlab/vqf](https://github.com/splatlab/vqf).  Here is a summary of the changes that were made:

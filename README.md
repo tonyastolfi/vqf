@@ -67,8 +67,8 @@ Authors
 - Alex Conway <aconway@vmware.com>
 - Rob Johnson <robj@vmware.com>
 
-C++ Port + Extensions
----------------------
+C++ Port and Extensions
+-----------------------
 - Tony Astolfi <tastolfi@gmail.com>
 
 ## Modifications
@@ -78,7 +78,7 @@ This is a fork of [https://github.com/splatlab/vqf](https://github.com/splatlab/
 - Replaced the original Makefile with a `conanfile.py` and `CMakeLists.txt` to make the library more readily consumable by downstream projects.
 - Changed the implementation language from C to C++
 - Added the ability to initialize a filter in-place, so that memory for a filter can be allocated however the client application wishes
-- Changed the TAG_BITS parameter from a compile time macro, where only one value can be selected at a time, to a compile-time parameter, to a compile-time template parameter, where clients are free to select either of 8 or 16 bit filters without recompiling the vqf library
+- Changed the TAG_BITS parameter from a compile time macro, where only one value can be selected at a time, to a compile-time template parameter, where clients are free to select either of 8 or 16 bit filters without recompiling the vqf library
 - Put the header files in a namespace-directory: NEW: `#include <vcf/vcf_filter.h>`, OLD: `#include <vcf_filter.h>`
 - Added a simple [Google Test](https://github.com/google/googletest)-based unit test which:
   - creates a filter

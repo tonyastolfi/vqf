@@ -493,6 +493,19 @@ uint64_t vqf_nslots_for_size(int tag_bits, uint64_t target_byte_size)
 
 //==#==========+==+=+=++=+++++++++++-+-+--+----- --- -- -  -  -   -
 //
+template <int TAG_BITS>
+uint64_t vqf_required_size(uint64_t nslots)
+{
+   vqf_filter_init_params<TAG_BITS> params{nslots};
+
+   return sizeof(vqf_filter<TAG_BITS>) + params.total_size_in_bytes;
+}
+
+template uint64_t vqf_required_size<8>(uint64_t nslots);
+template uint64_t vqf_required_size<16>(uint64_t nslots);
+
+//==#==========+==+=+=++=+++++++++++-+-+--+----- --- -- -  -  -   -
+//
 // Create n/log(n) blocks of log(n) slots.
 // log(n) is 51 given a cache line size.
 // n/51 blocks.
@@ -535,6 +548,9 @@ vqf_filter<TAG_BITS>* vqf_init_in_place(vqf_filter<TAG_BITS>* restrict filter, u
 
    return filter;
 }
+
+template vqf_filter<8>* vqf_init_in_place(vqf_filter<8>* restrict filter, uint64_t nslots);
+template vqf_filter<16>* vqf_init_in_place(vqf_filter<16>* restrict filter, uint64_t nslots);
 
 //+++++++++++-+-+--+----- --- -- -  -  -   -
 //

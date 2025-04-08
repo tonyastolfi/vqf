@@ -80,6 +80,9 @@ struct vqf_filter {
    vqf_block<TAG_BITS> blocks[];
 };
 
+/** \brief Returns the maximum number of slots that can fit in a filter with the specified TAG_BITS value,
+ * without exceeding the `target_byte_size`.
+ */
 uint64_t vqf_nslots_for_size(int tag_bits, uint64_t target_byte_size);
 
 /** \brief Returns the number of bytes required to initialize a filter with the specified number of slots.

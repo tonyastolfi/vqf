@@ -8,7 +8,8 @@ from conan.tools.build import can_run
 class vqfTestConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
     generators = "CMakeDeps", "CMakeToolchain"
-
+    tool_requires = "cmake/[>=3.29]"
+    
     def requirements(self):
         self.requires(self.tested_reference_str)
 

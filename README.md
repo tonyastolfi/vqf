@@ -37,7 +37,14 @@ API
 
 Build
 -------
-This library depends on libssl. 
+___WARNING: These build instructions are for the original (forked)
+project and no longer work in this repo, due to the switch to
+Conan/CMake.  Issue #1 has a discussion thread with some details about
+how to build with the new toolchain; eventually I will get around to
+providing better instructions here.___
+
+This library depends on
+libssl.
 
 The code uses AVX512 instructions to speed up operatons. However, there is also
 an alternate implementation based on AVX2. 

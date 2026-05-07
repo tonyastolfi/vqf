@@ -5,7 +5,7 @@ import os, sys, platform
 class VqfRecipe(ConanFile):
     name = "vqf"
 
-    python_requires = "cor_recipe_utils/0.8.7"
+    python_requires = "cor_recipe_utils/0.19.1"
     python_requires_extend = "cor_recipe_utils.ConanFileBase"
 
     tool_requires = [
@@ -64,24 +64,26 @@ class VqfRecipe(ConanFile):
     #+++++++++++-+-+--+----- --- -- -  -  -   -
 
     def set_version(self):
-        return self.cor.set_version_from_git_tags(self)
+        self.cor.set_version_from_git_tags(self)
 
     def layout(self):
-        return self.cor.layout_cmake_unified_src(self)
+        self.cor.layout_cmake_unified_src(self)
+        self.cpp.build.libdirs += ['src']
+        self.cpp.build.libs += ['vqf']
 
     def generate(self):
-        return self.cor.generate_cmake_default(self)
+        self.cor.generate_cmake_default(self)
 
     def build(self):
-        return self.cor.build_cmake_default(self)
+        self.cor.build_cmake_default(self)
 
     def package(self):
-        return self.cor.package_cmake_lib_default(self)
+        self.cor.package_cmake_lib_default(self)
 
     def package_info(self):
-        return self.cor.package_info_lib_default(self)
+        self.cor.package_info_lib_default(self)
 
     def package_id(self):
-        return self.cor.package_id_lib_default(self)
+        self.cor.package_id_lib_default(self)
 
     #+++++++++++-+-+--+----- --- -- -  -  -   -

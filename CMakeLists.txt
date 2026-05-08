@@ -12,9 +12,9 @@ if ("${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_DEBUG} ${CMAKE_CXX_FLAGS_RELEASE} ${CM
   message("\nNDTE: Disabling LTO because of compile flags: ${CMAKE_MATCH_0}\n")
   set(CMAKE_INTERPROCEDURAL_OPTIMIZATION FALSE)
 else ()
-  set(VQF_EXTRA_COMPILE_FLAGS -fgnu-tm)
+  #set(VQF_EXTRA_COMPILE_FLAGS -fgnu-tm)
 endif ()
 
-add_compile_options(-msse4.2 -march=native -m64 -frename-registers ${VQF_EXTRA_COMPILE_FLAGS})
+#add_compile_options(-msse4.2 -march=native -m64 -frename-registers ${VQF_EXTRA_COMPILE_FLAGS})
 
 add_subdirectory(src)
